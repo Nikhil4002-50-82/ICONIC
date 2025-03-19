@@ -37,7 +37,7 @@ const Navbar = () => {
         <p className="text-red-600">User type not set. Please contact support or set your user type.</p>
         <button
           onClick={handleLogout}
-          className="mt-4 p-2 px-4 text-white bg-brightRed rounded-full hover:bg-brightRedLight"
+          className="mt-4 p-2 px-4 text-white bg-[#3F7D58] rounded-full"
         >
           Logout
         </button>
@@ -46,10 +46,10 @@ const Navbar = () => {
   }
 
   return (
-    <nav className="relative container mx-auto p-6">
+    <nav className="relative container w-full justify-self-center">
       <div className="flex items-center justify-between">
         <div className="pt-2">
-          <img src={companyLogo} alt="Company Logo" />
+<p className='text-6xl text-[#3F7D58] font-extrabold'>TAB TIMER</p>
         </div>
         <div className="hidden space-x-6 md:flex">
           <Link to="/" className="hover:text-darkGrayishBlue">Home</Link>
@@ -75,14 +75,14 @@ const Navbar = () => {
           {isSignedIn ? (
             <button
               onClick={handleLogout}
-              className="hidden p-3 px-6 pt-2 text-white bg-brightRed rounded-full baseline hover:bg-brightRedLight md:block"
+              className="hidden p-3 px-6 pt-2 text-white bg-[#3F7D58] rounded-full baseline md:block"
             >
               Logout
             </button>
           ) : (
             <Link
               to="/get-started"
-              className="hidden p-3 px-6 pt-2 text-white bg-brightRed rounded-full baseline hover:bg-brightRedLight md:block"
+              className="hidden p-3 px-6 pt-2 text-white bg-[#3F7D58] rounded-full baseline  md:block"
             >
               Get Started
             </Link>

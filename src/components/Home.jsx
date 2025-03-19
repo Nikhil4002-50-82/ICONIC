@@ -11,18 +11,9 @@ const Home = () => {
       <div className="max-w-7xl w-full flex flex-col md:flex-row items-center justify-between gap-10">
         {/* Left Section - Text Content */}
         <div className="md:w-1/2 text-center md:text-left">
-          <h1 className="text-4xl md:text-5xl font-bold mb-4 text-brightRed">
-            THE MEDICATION CLOUD
+          <h1 className="text-3xl md:text-4xl font-bold mb-4 text-[#46A058]">
+            "Forget Forgetting" - Your Personal Pill Assistant is here!
           </h1>
-          <h2 className="text-3xl text-brightRed md:text-4xl font-semibold mb-6">
-            Get the most out of medications
-          </h2>
-          <p className="text-black mb-8">
-            Medications are essential to your organization's success, but are
-            they delivering their full potential? MedCloud's intelligent
-            Medication Cloud connects patients, care teams, and enterprises to
-            maximize the value of medications.
-          </p>
           {/* <Link
                     to='/get-started'
                     className='w-24 hidden p-3 px-6 pt-2 text-white bg-brightRed rounded-full baseline hover:bg-brightRedLight md:block'

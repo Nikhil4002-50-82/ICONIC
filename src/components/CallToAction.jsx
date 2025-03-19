@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 
 const CallToAction = () => {
   return (
-    <section id='cta' className='bg-brightRed'>
+    <section id='cta' className='bg-[#3F7D58]'>
       {/* Flex Container */}
       <div className='container flex flex-col items-center justify-between px-6 py-24 mx-auto space-y-12 md:py-12 md:flex-row md:space-y-0 mt-8'>
         {/* Heading */}
@@ -13,7 +13,7 @@ const CallToAction = () => {
         <div>
           <Link
             to='/get-started'
-            className='p-3 px-6 pt-2 text-brightRed bg-white rounded-full shadow-2xl baseline hover:bg-gray-900'
+            className='p-3 px-6 pt-2 text-[#3F7D58] bg-white rounded-full shadow-2xl baseline hover:bg-gray-900 hover:text-white'
           >
             Get Started
           </Link>

@@ -80,7 +80,7 @@ const Footer = () => {
                 className='flex-1 px-4 rounded-full focus:outline-none'
                 placeholder='Updated in your inbox'
               />
-              <button className='px-6 py-2 text-white rounded-full bg-brightRed hover:bg-brightRedLight focus:outline-none'>
+              <button className='px-6 py-2 text-white rounded-full bg-[#3F7D58] hover:bg-white hover:text-[#3F7D58] focus:outline-none'>
                 Go
               </button>
             </div>

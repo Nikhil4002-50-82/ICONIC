@@ -21,15 +21,14 @@ const Hero = () => {
           <div className='flex justify-center md:justify-start'>
             <Link
               to='/get-started'
-              className='p-3 px-6 pt-2 text-white bg-brightRed rounded-full baseline hover:bg-brightRedLight'
+              className='p-3 px-6 pt-2 text-white bg-[#3F7D58] rounded-full baseline '
             >
               Get Started
             </Link>
           </div>
         </div>
-        {/* Image */}
-        <div className='md:w-1/2'>
-          <img src={illustrationIntro} alt='' />
+        <div className='h-72 w-72'>
+          <img src="https://i.pinimg.com/1200x/9c/41/c0/9c41c0e325ed0b8140a6113aa04ba103.jpg" />
         </div>
       </div>
     </section>
