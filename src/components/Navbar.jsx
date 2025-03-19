@@ -1,23 +1,25 @@
 import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import supabase from '../utils/supabase'; // Ensure you have your Supabase client setup
-import companyLogo from '../assets/images/logo-med.jpeg';
 
 const Navbar = () => {
   const [toggleMenu, setToggleMenu] = useState(false);
   const [user, setUser] = useState(null);
   const [userType, setUserType] = useState(null);
+  const [loading, setLoading] = useState(true); // Track loading state
   const navigate = useNavigate();
 
   useEffect(() => {
     const fetchUser = async () => {
+      setLoading(true);
       const { data, error } = await supabase.auth.getUser();
       if (error) {
         console.error('Error fetching user:', error);
-        return;
+      } else {
+        setUser(data?.user);
+        setUserType(data?.user?.user_metadata?.userType);
       }
-      setUser(data?.user);
-      setUserType(data?.user?.user_metadata?.userType);
+      setLoading(false);
     };
 
     fetchUser();
@@ -30,11 +32,11 @@ const Navbar = () => {
     navigate('/get-started');
   };
 
-  if (!isLoaded) {
+  if (loading) {
     return <div className='text-center'>Loading...</div>;
   }
 
-  if (isSignedIn && !userType) {
+  if (user && !userType) {
     return (
       <div className="text-center p-6">
         <p className="text-red-600">User type not set. Please contact support or set your user type.</p>
@@ -52,7 +54,7 @@ const Navbar = () => {
     <nav className="relative container w-full justify-self-center">
       <div className="flex items-center justify-between">
         <div className="pt-2">
-<p className='text-6xl text-[#3F7D58] font-extrabold'>TAB TIMER</p>
+          <p className='text-6xl text-[#3F7D58] font-extrabold'>TAB TIMER</p>
         </div>
         <div className="hidden space-x-6 md:flex">
           <Link to="/" className="hover:text-darkGrayishBlue">Home</Link>
@@ -81,7 +83,7 @@ const Navbar = () => {
           ) : (
             <Link
               to="/get-started"
-              className="hidden p-3 px-6 pt-2 text-white bg-[#3F7D58] rounded-full baseline  md:block"
+              className="hidden p-3 px-6 pt-2 text-white bg-[#3F7D58] rounded-full baseline md:block"
             >
               Get Started
             </Link>
