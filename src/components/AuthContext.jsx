@@ -1,5 +1,5 @@
 import React, { createContext, useState, useEffect } from 'react';
-import axios from 'axios';
+import supabase from '../utils/supabase';  // Import Supabase client
 
 export const AuthContext = createContext();
 
@@ -13,27 +13,34 @@ export const AuthProvider = ({ children }) => {
     }
   }, []);
 
+  // Signup with Supabase Auth
   const signup = async (email, password) => {
-    try {
-      await axios.post('http://localhost:5000/auth/signup', { email, password });
-      return { success: true };
-    } catch (error) {
-      return { success: false, error: error.response.data.error };
+    const { data, error } = await supabase.auth.signUp({ email, password });
+
+    if (error) {
+      return { success: false, error: error.message };
     }
+
+    return { success: true };
   };
 
+  // Login with Supabase Auth
   const login = async (email, password) => {
-    try {
-      const response = await axios.post('http://localhost:5000/auth/login', { email, password });
-      localStorage.setItem('token', response.data.token);
-      setUser({ token: response.data.token });
-      return { success: true };
-    } catch (error) {
-      return { success: false, error: error.response.data.error };
+    const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+
+    if (error) {
+      return { success: false, error: error.message };
     }
+
+    localStorage.setItem('token', data.session.access_token);
+    setUser({ token: data.session.access_token });
+
+    return { success: true };
   };
 
-  const logout = () => {
+  // Logout from Supabase Auth
+  const logout = async () => {
+    await supabase.auth.signOut();
     localStorage.removeItem('token');
     setUser(null);
   };

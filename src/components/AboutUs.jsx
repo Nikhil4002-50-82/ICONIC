@@ -7,8 +7,7 @@ import Footer from './Footer';
 import Form from './form';
 function AboutUs() {
     return (
-      <div>
-        
+      <div> 
         <Hero />
         <Features />
         <CallToAction />

@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
 import { Link, useLocation } from 'react-router-dom';
-import { useUser, useAuth } from '@clerk/clerk-react';
+import { useUser } from '@clerk/clerk-react'; // If using Clerk for authentication
+import supabase from '../utils/supabase';
 
 const DoctorDashboard = () => {
   const { state } = useLocation();
-  const { user, isLoaded } = useUser();
-  const { getToken } = useAuth();
+  const { user, isLoaded } = useUser(); // Clerk authentication
   const doctorId = state?.doctorId || (isLoaded ? user?.id : null);
+
   const [patients, setPatients] = useState([]);
   const [error, setError] = useState('');
   const [newPatient, setNewPatient] = useState({ email: '', name: '', patientId: '' });
@@ -20,28 +20,23 @@ const DoctorDashboard = () => {
           setError('Doctor ID is not available');
           return;
         }
-        const token = await getToken();
-        if (!token) {
-          throw new Error('Failed to retrieve authentication token');
-        }
-        const response = await axios.get(`http://localhost:5000/api/auth/doctor-patients/${doctorId}`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-        setPatients(response.data);
+
+        const { data, error } = await supabase
+          .from('doctor_patients')
+          .select('*')
+          .eq('doctor_id', doctorId);
+
+        if (error) throw error;
+
+        setPatients(data);
       } catch (error) {
-        console.error('Error fetching patients:', {
-          message: error.message,
-          response: error.response?.data,
-          status: error.response?.status,
-        });
-        setError(error.response?.data?.message || error.message || 'Error fetching patients');
+        console.error('Error fetching patients:', error);
+        setError(error.message || 'Error fetching patients');
       }
     };
 
     if (doctorId) fetchPatients();
-  }, [doctorId, getToken]);
+  }, [doctorId]);
 
   const handleAddPatient = async (e) => {
     e.preventDefault();
@@ -49,32 +44,25 @@ const DoctorDashboard = () => {
     setSuccessMessage('');
 
     try {
-      const token = await getToken();
-      if (!token) {
-        throw new Error('Failed to retrieve authentication token');
+      if (!doctorId) {
+        setError('Doctor ID is missing');
+        return;
       }
-      console.log('Adding patient with data:', newPatient, 'for doctorId:', doctorId, 'token:', token);
-      const response = await axios.post(
-        `http://localhost:5000/api/auth/doctor/${doctorId}/add-patient`,
-        newPatient,
-        {
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}`,
-          },
-          withCredentials: true,
-        }
-      );
-      setPatients([...patients, response.data.patient]);
-      setSuccessMessage(response.data.message);
+
+      const { data, error } = await supabase
+        .from('doctor_patients')
+        .insert([{ doctor_id: doctorId, ...newPatient }])
+        .select()
+        .single();
+
+      if (error) throw error;
+
+      setPatients([...patients, data]);
+      setSuccessMessage('Patient added successfully!');
       setNewPatient({ email: '', name: '', patientId: '' });
     } catch (error) {
-      console.error('Error adding patient:', {
-        message: error.message,
-        response: error.response?.data,
-        status: error.response?.status,
-      });
-      setError(error.response?.data?.message || error.message || 'Error adding patient');
+      console.error('Error adding patient:', error);
+      setError(error.message || 'Error adding patient');
     }
   };
 
@@ -147,23 +135,23 @@ const DoctorDashboard = () => {
           <div className="space-y-4">
             {patients.map((patient) => (
               <div
-                key={patient._id}
+                key={patient.patientId}
                 className="p-4 bg-white rounded-lg shadow-md flex justify-between items-center"
               >
                 <p className="text-lg font-medium">{patient.name} (ID: {patient.patientId})</p>
                 <div>
                   <Link
                     to={`/report`}
-                    state={{ userId: patient.userId }}
+                    state={{ userId: patient.patientId }}
                     className="text-brightRed hover:underline mr-4"
                   >
                     View Report
                   </Link>
                   <Link
                     to={`/reminder`}
-                    state={{ patientId: patient._id, isDoctor: true }}
+                    state={{ patientId: patient.patientId, isDoctor: true }}
                     className="text-brightRed hover:underline"
-                    onClick={() => handleManageReminders(patient._id)}
+                    onClick={() => handleManageReminders(patient.patientId)}
                   >
                     Manage Reminders
                   </Link>
